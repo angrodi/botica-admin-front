@@ -1,0 +1,16 @@
+<div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between center">
+  <div>Confirmación</div>
+  <button type="button" mat-icon-button (click)="cerrar('cerrado')" tabindex="-1">
+      <mat-icon [icIcon]="icClose"></mat-icon>
+  </button>
+</div>  
+
+<mat-dialog-content>
+  <p>{{ pregunta }}</p>
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cerrar('no')">NO</button>
+  <button mat-button color="primary" (click)="cerrar('si')">SÍ</button>
+</mat-dialog-actions>

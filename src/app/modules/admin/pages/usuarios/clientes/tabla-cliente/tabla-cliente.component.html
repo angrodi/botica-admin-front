@@ -1,0 +1,150 @@
+<vex-page-layout>
+
+  <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
+    <div class="w-full flex flex-col sm:flex-row justify-between px-gutter">
+      <div>
+        <h1 class="title mt-0 mb-1">Lista de clientes</h1>
+        <vex-breadcrumbs [crumbs]="['Clientes']"></vex-breadcrumbs>
+      </div>
+    </div>
+  </vex-page-layout-header>
+
+  <vex-page-layout-content class="-mt-6 px-gutter">
+
+    <div class="card overflow-auto -mt-16">
+      <div class="bg-app-bar px-6 h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+        <h2 class="title my-0 ltr:pr-4 rtl:pl-4 ltr:mr-4 rtl:ml-4 ltr:border-r rtl:border-l" fxFlex="none" fxHide.xs>
+          <span>Clientes</span>
+        </h2>
+
+        <div class="bg-card rounded-full border px-4"
+             fxFlex="400px"
+             fxFlex.lt-md="auto"
+             fxHide.xs
+             fxLayout="row"
+             fxLayoutAlign="start center">
+          <ic-icon [icIcon]="icSearch" size="20px"></ic-icon>
+          <input [formControl]="searchCtrl"
+                 class="px-4 py-3 border-0 outline-none w-full bg-transparent"
+                 placeholder="Buscar..."
+                 type="search">
+        </div>
+
+        <span fxFlex></span>
+
+        <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
+          <mat-icon [icIcon]="icSearch"></mat-icon>
+        </button>
+
+        <button [matMenuTriggerFor]="columnFilterMenu"
+                class="ml-4"
+                fxFlex="none"
+                mat-icon-button
+                matTooltip="Filtrar columnas"
+                type="button">
+          <mat-icon [icIcon]="icFilterList"></mat-icon>
+        </button>
+
+        <button (click)="crearCliente()"
+                class="ml-4"
+                color="primary"
+                fxFlex="none"
+                mat-mini-fab
+                [matTooltip]="'Nuevo cliente'"
+                type="button">
+          <mat-icon [icIcon]="icAdd"></mat-icon>
+        </button>
+      </div>
+
+      <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
+
+        <ng-container matColumnDef="id">
+          <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> Código</th>
+          <td *matCellDef="let row" ngClass="text-secondary font-medium" mat-cell>{{ row.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="nombre">
+          <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> Nombre</th>
+          <td *matCellDef="let row" ngClass="text-secondary font-medium" mat-cell>{{ row.nombres + ' ' + row.apellidos }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="nombres">
+          <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> Nombres</th>
+          <td *matCellDef="let row" ngClass="text-secondary font-medium" mat-cell>{{ row.nombres }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="apellidos">
+          <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> Apellidos</th>
+          <td *matCellDef="let row" ngClass="text-secondary font-medium" mat-cell>{{ row.apellidos }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="dni">
+          <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> DNI</th>
+          <td *matCellDef="let row" ngClass="text-secondary font-medium" mat-cell>{{ row.dni }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> Email</th>
+          <td *matCellDef="let row" ngClass="text-secondary font-medium" mat-cell>{{ row.email }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="telefono">
+          <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> Teléfono</th>
+          <td *matCellDef="let row" ngClass="text-secondary font-medium" mat-cell>{{ row.telefono }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="direccion">
+          <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> Dirección</th>
+          <td *matCellDef="let row" ngClass="text-secondary font-medium" mat-cell>{{ row.direccion }}</td>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="actions">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
+          <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>
+            <button (click)="$event.stopPropagation()"
+                    [matMenuTriggerData]="{ customer: row }"
+                    [matMenuTriggerFor]="actionsMenu"
+                    mat-icon-button
+                    type="button">
+              <mat-icon [icIcon]="icMoreHoriz"></mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: visibleColumns;"
+            @fadeInUp
+            class="hover:bg-hover trans-ease-out cursor-pointer"
+            mat-row></tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" class="sticky left-0"></mat-paginator>
+    </div>
+
+  </vex-page-layout-content>
+
+</vex-page-layout>
+
+<mat-menu #columnFilterMenu="matMenu" xPosition="before" yPosition="below">
+  <button (click)="toggleColumnVisibility(column, $event)" *ngFor="let column of columns"
+          class="checkbox-item mat-menu-item">
+    <mat-checkbox (click)="$event.stopPropagation()" [(ngModel)]="column.visible" color="primary">
+      {{ column.label }}
+    </mat-checkbox>
+  </button>
+</mat-menu>
+
+<mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
+  <ng-template let-customer="customer" matMenuContent>
+    <button (click)="actualizarCliente(customer)" mat-menu-item>
+      <mat-icon [icIcon]="icEdit"></mat-icon>
+      <span>Editar</span>
+    </button>
+    <button *ngIf="userLoggedIsAdmin"
+            (click)="eliminarCliente(customer)" mat-menu-item>
+      <mat-icon [icIcon]="icDelete"></mat-icon>
+      <span>Eliminar</span>
+    </button>
+  </ng-template>
+</mat-menu>

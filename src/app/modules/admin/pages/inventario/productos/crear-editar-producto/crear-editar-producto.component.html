@@ -1,0 +1,117 @@
+<form (ngSubmit)="guardar()" [formGroup]="form">
+  <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <!-- <img *ngIf="form.get('imageSrc').value" [src]="form.get('imageSrc').value" class="avatar mr-5"> -->
+
+    <h2 *ngIf="esModoCrear()"
+        class="headline m-0"
+        fxFlex="auto">
+        Nuevo producto
+    </h2>
+    <h2 *ngIf="esModoEditar()"
+        class="headline m-0"
+        fxFlex="auto">
+        Editar producto
+    </h2>
+
+    <!-- <button [matMenuTriggerFor]="settingsMenu" class="text-secondary" mat-icon-button type="button">
+      <mat-icon [icIcon]="icMoreVert"></mat-icon>
+    </button> -->
+
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+      <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+  </div>
+
+  <mat-divider class="-mx-6 text-border"></mat-divider>
+
+  <mat-dialog-content fxLayout="column" class="mt-6">
+
+    <div fxLayout="row" fxLayoutAlign="center center">
+      <div class="w-full h-56 border-dashed border-2 rounded border-gray flex justify-center cursor-pointer p-4" (click)="fileInput.click()">
+        <div class="flex items-center justify-center" *ngIf="!( (filePath && filePath !== '') || producto.imagen )">Seleccionar una imagen</div>
+        <img *ngIf="filePath && filePath !== ''"
+             [src]="filePath" alt="Imagen del producto">
+        <img *ngIf="mostrarUrl"
+             [src]="producto.imagen" alt="Imagen del producto">
+      </div>
+      <input hidden #fileInput type="file" (change)="uploadFile($event)">
+    </div>
+
+    <mat-form-field class="mt-6 flex-auto mb-2">
+      <mat-label>Nombre</mat-label>
+      <input cdkFocusInitial formControlName="nombre" matInput>
+      <mat-error *ngIf="errorCampoRequerido('nombre')">Nombre requerido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="flex-auto mb-2">
+      <mat-label>Descripción</mat-label>
+      <textarea formControlName="descripcion" matInput 
+                cdkTextareaAutosize
+                cdkAutosizeMinRows="2"
+                cdkAutosizeMaxRows="5"></textarea>
+      <mat-error *ngIf="errorCampoRequerido('descripcion')">Descripción requerida</mat-error>
+    </mat-form-field>
+
+    <div class="flex flex-col sm:flex-row mb-2">
+      <mat-form-field class="flex-auto">
+        <mat-label>Precio</mat-label>
+        <input formControlName="precio" matInput type="number">
+        <mat-error *ngIf="errorCampoRequerido('precio')">Precio requerido</mat-error>
+        <mat-error *ngIf="errorCampoPositivo('precio')">El precio no puede ser negativo</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="sm:ml-6 flex-auto">
+        <mat-label>Stock</mat-label>
+        <input formControlName="stock" matInput type="number">
+        <mat-error *ngIf="errorCampoRequerido('stock')">Stock requerido</mat-error>
+        <mat-error *ngIf="errorCampoPositivo('stock')">El stock no puede ser negativo</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col sm:flex-row">
+      <mat-form-field class="flex-auto">
+        <mat-label>Categoría</mat-label>
+        <mat-select formControlName="categoriaId" matInput>
+          <mat-option [value]="categoria.id" *ngFor="let categoria of categorias">{{ categoria.nombre }}</mat-option>
+          <mat-option disabled *ngIf="categorias?.length === 0">No hay categorías disponibles</mat-option>
+        </mat-select>
+        <mat-error *ngIf="errorCampoRequerido('categoriaId')">Categoría requerida</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="sm:ml-6 flex-auto">
+        <mat-label>Estado</mat-label>
+        <mat-select formControlName="estado" matInput>
+          <mat-option [value]="1">Activo</mat-option>
+          <mat-option [value]="0">Inactivo</mat-option>
+        </mat-select>
+        <mat-error *ngIf="errorCampoRequerido('estado')">Estado requerido</mat-error>
+      </mat-form-field>
+    </div>
+
+  </mat-dialog-content>
+
+  
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close type="button">CANCELAR</button>
+    <button *ngIf="esModoCrear()" color="primary" mat-button type="submit" [disabled]="form.pending || form.invalid">CREAR</button>
+    <button *ngIf="esModoEditar()" color="primary" mat-button type="submit" [disabled]="form.pending || form.invalid">ACTUALIZAR</button>
+  </mat-dialog-actions>
+</form>
+
+<mat-menu #settingsMenu="matMenu" xPosition="before" yPosition="below">
+  <button mat-menu-item>
+    <mat-icon [icIcon]="icPrint"></mat-icon>
+    <span>Print</span>
+  </button>
+
+  <button mat-menu-item>
+    <mat-icon [icIcon]="icDownload"></mat-icon>
+    <span>Export</span>
+  </button>
+
+  <button mat-menu-item>
+    <mat-icon [icIcon]="icDelete"></mat-icon>
+    <span>Delete</span>
+  </button>
+</mat-menu>

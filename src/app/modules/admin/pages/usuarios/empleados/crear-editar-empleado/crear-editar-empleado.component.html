@@ -1,0 +1,124 @@
+<form (ngSubmit)="guardar()" [formGroup]="form">
+  <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <!-- <img *ngIf="form.get('imageSrc').value" [src]="form.get('imageSrc').value" class="avatar mr-5"> -->
+
+    <h2 *ngIf="esModoCrear()"
+        class="headline m-0"
+        fxFlex="auto">Nuevo empleado
+    </h2>
+    <h2 *ngIf="esModoEditar()"
+        class="headline m-0"
+        fxFlex="auto">Editar empleado
+    </h2>
+
+    <!-- <button [matMenuTriggerFor]="settingsMenu" class="text-secondary" mat-icon-button type="button">
+      <mat-icon [icIcon]="icMoreVert"></mat-icon>
+    </button> -->
+
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+      <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+  </div>
+
+  <mat-divider class="-mx-6 text-border"></mat-divider>
+
+  <mat-dialog-content fxLayout="column">
+    <div class="flex flex-col sm:flex-row mb-2">
+      <mat-form-field class="mt-6 flex-auto">
+        <mat-label>Nombres</mat-label>
+        <input cdkFocusInitial formControlName="nombres" matInput>
+
+        <mat-icon [icIcon]="icPerson" class="mr-3" matPrefix></mat-icon>
+        <mat-error *ngIf="errorCampoRequerido('nombres')">Nombres requeridos</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="sm:mt-6 sm:ml-6 flex-auto">
+        <mat-label>Apellidos</mat-label>
+        <input cdkFocusInitial formControlName="apellidos" matInput>
+
+        <mat-icon [icIcon]="icPerson" class="mr-3" matPrefix></mat-icon>
+        <mat-error *ngIf="errorCampoRequerido('apellidos')">Apellidos requeridos</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col sm:flex-row mb-2">
+      <mat-form-field class="flex-auto">
+        <mat-label>DNI</mat-label>
+        <input formControlName="dni" matInput type="number">
+  
+        <mat-icon [icIcon]="icPicture" class="mr-3" matPrefix></mat-icon>
+        <mat-error *ngIf="errorCampoRequerido('dni')">DNI requerido</mat-error>
+        <mat-error *ngIf="errorFormatoDNI()">El DNI debe tener 8 dígitos</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="sm:ml-6 flex-auto">
+        <mat-label>Teléfono</mat-label>
+        <input formControlName="telefono" matInput>
+  
+        <mat-icon [icIcon]="icPhone" class="mr-3" matPrefix></mat-icon>
+        <mat-error *ngIf="errorCampoRequerido('telefono')">Teléfono requerido</mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field class="flex-auto">
+      <mat-label>Dirección</mat-label>
+      <input formControlName="direccion" matInput>
+
+      <mat-icon [icIcon]="icEditLocation" class="mr-3" matPrefix></mat-icon>
+      <mat-error *ngIf="errorCampoRequerido('direccion')">Dirección requerida</mat-error>
+    </mat-form-field>
+
+    <mat-divider class="mt-3 -mx-6 text-border"></mat-divider>
+
+    <mat-form-field class="mt-6 flex-auto mb-2">
+      <mat-label>Correo electrónico</mat-label>
+      <input formControlName="email" matInput>
+
+      <mat-icon [icIcon]="icEmail" class="mr-3" matPrefix></mat-icon>
+      <mat-error *ngIf="errorCampoRequerido('email')">Correo electrónico requerido</mat-error>
+      <mat-error *ngIf="errorEmailInvalido()">Ingrese un correo electrónico válido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="flex-auto mb-2" *ngIf="modo === 'crear'">
+      <mat-label>Contraseña</mat-label>
+      <input [type]="inputType" formControlName="password" matInput required>
+      <button (click)="toggleVisibility()" mat-icon-button matSuffix [matTooltip]="visible ? 'Ocultar contraseña' : 'Mostrar contraseña'" type="button">
+        <mat-icon *ngIf="visible" [icIcon]="icVisibility"></mat-icon>
+        <mat-icon *ngIf="!visible" [icIcon]="icVisibilityOff"></mat-icon>
+      </button>
+
+      <mat-icon [icIcon]="icLock" class="mr-3" matPrefix></mat-icon>
+      <mat-error *ngIf="errorCampoRequerido('password')">Contraseña requerida</mat-error>
+    </mat-form-field>
+
+    <div class="flex flex-col sm:flex-row">
+      <mat-form-field class="flex-auto">
+        <mat-label>Rol</mat-label>
+        <mat-select cdkFocusInitial formControlName="rolId" matInput>
+          <mat-option [value]="rol.id" *ngFor="let rol of roles">{{ rol.nombre | titlecase }}</mat-option>
+        </mat-select>
+  
+        <mat-icon [icIcon]="icSupervisedUser" class="mr-3" matPrefix></mat-icon>
+        <mat-error *ngIf="errorCampoRequerido('rolId')">Rol requerido</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="sm:ml-6 flex-auto">
+        <mat-label>Estado</mat-label>
+        <mat-select cdkFocusInitial formControlName="estado" matInput>
+          <mat-option [value]="1">Activo</mat-option>
+          <mat-option [value]="0">Inactivo</mat-option>
+        </mat-select>
+  
+        <mat-icon [icIcon]="icPerson" class="mr-3" matPrefix></mat-icon>
+        <mat-error *ngIf="errorCampoRequerido('estado')">Estado requerido</mat-error>
+      </mat-form-field>
+    </div>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close type="button">CANCELAR</button>
+    <button *ngIf="esModoCrear()" color="primary" mat-button type="submit" [disabled]="form.pending || form.invalid">CREAR</button>
+    <button *ngIf="esModoEditar()" color="primary" mat-button type="submit" [disabled]="form.pending || form.invalid">ACTUALIZAR</button>
+  </mat-dialog-actions>
+</form>

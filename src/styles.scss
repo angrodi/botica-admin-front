@@ -1,0 +1,75 @@
+@import "~simplebar/dist/simplebar.css";
+@import "~highlight.js/styles/androidstudio.css";
+// Vex Core
+@import "./@vex/styles/core";
+
+/*
+  You can override any CSS Variable or style here
+  Example:
+
+  :root {
+   --sidenav-background: #333333;
+  }
+
+  All possible variables can be found in @vex/styles/core or by simply inspecting the element you want to change
+  in Chrome/Firefox DevTools
+*/
+
+/**
+  Uncomment the below code and adjust the values to fit your colors, the application will automatically adjust
+ */
+:root {
+  // --color-primary: blue;
+  // --color-primary-contrast: white;
+
+  // --color-accent: yellow;
+  // --color-accent-contrast: black;
+
+  // --color-warn: yellow;
+  // --color-warn-contrast: black;
+}
+
+.green-snackbar {
+  background: teal;
+  color: white;
+
+  button {
+    background: teal;
+    color: white;
+    border: none;
+  }
+}
+
+.red-snackbar {
+  background: #f44336;
+  color: white;
+
+  button {
+    background: #f44336;
+    color: white;
+    border: none;
+  }
+}
+
+.yellow-snackbar {
+  background: #FFC107;
+  color: black;
+
+  button {
+    background: #FFC107;
+    color: black;
+    border: none;
+  }
+}
+
+// Fix mat-error for multiline error messages
+// Workaround for https://github.com/angular/material2/issues/4580.
+// mat-form-field .mat-form-field {
+//   &-underline {
+//     position: relative;
+//     bottom: auto;
+//   }
+//   &-subscript-wrapper {
+//     position: static;
+//   }
+// }

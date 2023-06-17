@@ -1,0 +1,107 @@
+<div>
+  <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <!-- <img *ngIf="form.get('imageSrc').value" [src]="form.get('imageSrc').value" class="avatar mr-5"> -->
+
+    <h2 class="headline m-0"
+        fxFlex="auto">
+        Detalle pedido
+    </h2>
+
+    <!-- <button [matMenuTriggerFor]="settingsMenu" class="text-secondary" mat-icon-button type="button">
+      <mat-icon [icIcon]="icMoreVert"></mat-icon>
+    </button> -->
+
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+      <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+  </div>
+
+  <mat-divider class="-mx-6 text-border"></mat-divider>
+
+  <mat-dialog-content fxLayout="column">
+
+    <div class="my-8">
+      <div>
+        <h3>Datos de contacto</h3>
+        <mat-divider class="-mx-6 text-border"></mat-divider>
+      </div>
+
+      <div class="grid grid-cols-3 mt-8 gap-6">
+        <div class="font-medium">Nombre del contacto:</div>
+        <div class="font-medium">DNI:</div>
+        <div class="font-medium">Correo electrónico:</div>
+      </div>
+      <div class="grid grid-cols-3 gap-6">
+        <div>{{ pedido.cliente.nombres + ' ' + pedido.cliente.apellidos }}</div>
+        <div>{{ pedido.cliente.dni }}</div>
+        <div>{{ pedido.cliente.email ? pedido.cliente.email : '' }}</div>
+      </div>
+
+      <div class="grid grid-cols-3 mt-8 gap-6">
+        <div class="font-medium">Teléfono:</div>
+        <div class="font-medium">Dirección:</div>
+        <div class="font-medium">Método de pago:</div>
+      </div>
+      <div class="grid grid-cols-3 gap-6">
+        <div>{{ pedido.cliente.telefono }}</div>
+        <div>{{ pedido.cliente.direccion }}</div>
+        <div>{{ pedido.metodoPago | titlecase }}</div>
+      </div>
+      
+    </div>
+
+    <div class="my-8">
+      <h3>Productos</h3>
+      <mat-divider class="-mx-6 text-border"></mat-divider>
+
+      <table class="w-full mt-6">
+        <thead style="background-color: lightgray;">
+          <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
+            <th class="px-4 py-3 text-xs font-medium">Código</th>
+            <th class="px-4 py-3 text-xs font-medium">Producto</th>
+            <th class="px-4 py-3 text-xs font-medium">Precio</th>
+            <th class="px-4 py-3 text-xs font-medium">Cantidad</th>
+            <th class="px-4 py-3 text-xs font-medium">Importe</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let detalle of pedido.detalles">
+            <td class="px-4 py-3 text-sm border">{{ detalle.productoId }}</td>
+            <td class="px-4 py-3 text-sm border">{{ detalle.producto.nombre }}</td>
+            <td class="px-4 py-3 text-sm border">{{ detalle.producto.precio | currency }}</td>
+            <td class="px-4 py-3 text-sm border">{{ detalle.cantidad }}</td>
+            <td class="px-4 py-3 text-sm border">{{ (detalle.producto.precio * detalle.cantidad) | currency }}</td>
+          </tr>
+
+          <!-- <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="px-4 py-3 text-sm border">Subtotal</td>
+            <td class="px-4 py-3 text-sm border">{{ 10 | currency }}</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="px-4 py-3 text-sm border">Costo de envío</td>
+            <td class="px-4 py-3 text-sm border">{{ 10 | currency }}</td>
+          </tr> -->
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="px-4 py-3 text-sm border">Total</td>
+            <td class="px-4 py-3 text-sm border">{{ pedido.monto | currency }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button color="primary" mat-button mat-dialog-close type="button">CERRAR</button>
+  </mat-dialog-actions>
+</div>
+
